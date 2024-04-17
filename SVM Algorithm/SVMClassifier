@@ -1,0 +1,45 @@
+import numpy as np
+
+class SVM_classifier():
+    # Initiating the hyperparameters
+    def _init_(self, LearningRate, NoOfIteration, LambdaParameter ):
+        self.LearningRate = LearningRate
+        self.NoOfIteration = NoOfIteration
+        self.LambdaParameter = LambdaParameter 
+
+    # Fitting the dataset to SVM classifier
+    def fit(self, X, Y):
+        self.m, self.n = X.shape
+        self.w = np.zeros(self.n)
+        self.b = 0
+        self.X = X
+        self.Y = Y
+
+        # Gradient Descent implementation for optimization
+        for i in range(self.NoOfIteration):
+            self.WeightsUpdate()
+
+    # Function for updating the weight and bias values
+    def WeightsUpdate(self):
+        # Label encoding
+        YLabel = np.where(self.Y <= 0, -1, 1)
+
+        for index, X_i in enumerate(self.X):
+
+            condition = YLabel[index]* (np.dot(X_i, self.w) - self.b) >= 1
+            if (condition == True):
+                dw = 2 * self.LambdaParameter * self.w
+                db = 0
+            else:
+                dw = 2 * self.LambdaParameter * self.w - np.dot(X_i, YLabel[index])
+                db = YLabel[index]
+
+            self.w = self.w - self.LearningRate * dw
+            self.b = self.b - self.LearningRate * db
+
+    # Predict the label for a given input value
+    def predict(self, X):
+        output = np.dot(X, self.w) - self.b
+        PredictedLabels = np.sign(output)
+        YHat = np.where(PredictedLabels <= -1, 0, 1)
+        return YHat
