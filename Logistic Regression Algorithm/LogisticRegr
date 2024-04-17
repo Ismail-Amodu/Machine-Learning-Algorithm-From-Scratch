@@ -1,0 +1,42 @@
+import numpy as np
+
+class LogisticRegression():
+
+    # Declaring the hyperparameters
+    def __init__(self, learningRate, num_of_iteration):
+        self.learningRate = learningRate
+        self.num_of_iteration = num_of_iteration
+    
+    # Training the model with dataset using fit funtion
+    def fit(self, X, Y):
+
+        # Number of rows (m) and column (n)
+        self.m, self.n = X.shape
+
+        # Initializing weight & bias value
+        self.w = np.zeros(self.n)
+        self.b = 0
+        self.X = X
+        self.Y = Y
+
+        # Implementing Gradient Descent for optimization
+        for i in range(self.num_of_iteration):
+            self.weights_update()
+
+    def weights_update(self):
+        # Building the Sigmoid function
+        Y_hat = 1/(1 + np.exp(-(self.X.dot(self.w) + self.b))) # z = wX = b = self.X.dot(self.w) + self.b
+
+        # Calculating the derivatives
+        dw = (1/self.m)*np.dot(self.X.T, (Y_hat - self.Y))
+        db = (1/self.m)*np.sum(Y_hat - self.Y) 
+
+        # Weights and bias update
+        self.w = self.w - self.learningRate * dw
+        self.b = self.b - self.learningRate * dw
+
+# Sidmoid equation and decision boundary
+    def predict(self, X):
+        Y_prediction = 1 / (1 + np.exp(-(X.dot(self.w) + self.b)))
+        Y_prediction = np.where(Y_prediction > 0.5, 1, 0)
+        return Y_prediction
