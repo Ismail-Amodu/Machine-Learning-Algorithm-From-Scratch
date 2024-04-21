@@ -1,0 +1,53 @@
+####################################
+#### Lasso Regression Algorithm ####
+####################################
+
+import numpy as np 
+
+# Class for Lasso Regression
+
+class LassoRegression():
+
+    # Initializing the hyperparameters
+    def __init__(self, LearningRate, NoOfIteration, LamdaParameter):
+
+        self.LearningRate = LearningRate
+        self.NoOfIteration = NoOfIteration
+        self.LamdaParameter = LamdaParameter
+
+    # Dataset being fitted into the Lasso Regression Model
+    def fit(self, X, Y):
+
+        self.m, self.n = X.shape # Number of rows and column for features dataset
+        self.w = np.zeros(self.n) # initializing weight values to zeros
+        self.b = 0 # bias value initialized to zero
+        self.X = X
+        self.Y = Y
+
+        # Gradient descent optimization
+        for i in range(NoOfIteration):
+            self.weights_update()
+
+    # Optimization- for updating the weight and bias
+    def weights_update(self):
+
+        # Equation of a straight line for the model
+        Y_pred = self.predict(self.X)
+
+        # Gradients (dw, db)
+        for i in range(self.n):
+            if self.w[i] > 0:
+                dw[i] = (-(2*(self.X[:,i]).dot(self.Y - Y_pred)) + self.LamdaParameter) / self.m
+            else:
+                dw[i] = (-(2*(self.X[:,i]).dot(self.Y - Y_pred)) - self.LamdaParameter) / self.m
+        
+        db = -2 * np.sum(self.Y -Y_pred) / self.m
+
+        # Weights and bias update
+        self.w = self.w - self.LearningRate * dw
+        self.b = self.b - self.LearningRate * db
+
+
+    # function that predict the target from  features
+    def predict(self):
+        return X.dot(self.w) + self.b
